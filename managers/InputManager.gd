@@ -3,7 +3,6 @@ class_name InputManager
 
 signal entered_target_mode()
 signal exited_target_mode()
-signal entity_targeted(entity: TargetableComponent)
 
 var _target_mode := false
 
