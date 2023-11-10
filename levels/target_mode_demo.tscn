@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://c31ndqqcd446r"]
+
+[ext_resource type="Script" path="res://managers/InputManager.gd" id="2_jqwis"]
+[ext_resource type="Texture2D" uid="uid://2oleeo5jibir" path="res://targeting_reticule.png" id="2_k4ves"]
+[ext_resource type="Script" path="res://managers/CombatManager.gd" id="2_q77vs"]
+[ext_resource type="Script" path="res://ui/AttackButton.gd" id="2_wdghr"]
+[ext_resource type="Script" path="res://ui/TargetCursor.gd" id="3_jdvtj"]
+[ext_resource type="Texture2D" uid="uid://ktjylrapa55g" path="res://icon.svg" id="3_xqg4q"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="4_jx47y"]
+[ext_resource type="Script" path="res://components/TargetableComponent.gd" id="5_trfk5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7pbwj"]
+size = Vector2(126, 126)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xnr58"]
+size = Vector2(124, 128)
+
+[node name="TargetModeDemo" type="Node2D"]
+
+[node name="GameUI" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="GameControls" type="PanelContainer" parent="GameUI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -92.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="AttackButton" type="Button" parent="GameUI/GameControls" node_paths=PackedStringArray("input_manager")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Attack"
+script = ExtResource("2_wdghr")
+input_manager = NodePath("../../../InputManager")
+
+[node name="TargetCursor" type="Control" parent="GameUI" node_paths=PackedStringArray("input_manager")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("3_jdvtj")
+input_manager = NodePath("../../InputManager")
+
+[node name="TextureRect" type="TextureRect" parent="GameUI/TargetCursor"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_k4ves")
+expand_mode = 2
+
+[node name="CombatManager" type="Node" parent="." node_paths=PackedStringArray("input_manager") groups=["managers"]]
+script = ExtResource("2_q77vs")
+input_manager = NodePath("../InputManager")
+
+[node name="InputManager" type="Node" parent="." groups=["managers"]]
+script = ExtResource("2_jqwis")
+
+[node name="Enemy" type="CharacterBody2D" parent="."]
+position = Vector2(520, 260)
+motion_mode = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
+shape = SubResource("RectangleShape2D_7pbwj")
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("3_xqg4q")
+
+[node name="Health" type="Node" parent="Enemy"]
+script = ExtResource("4_jx47y")
+
+[node name="Targetable" type="Area2D" parent="Enemy"]
+script = ExtResource("5_trfk5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/Targetable"]
+shape = SubResource("RectangleShape2D_xnr58")
